@@ -55,8 +55,10 @@ namespace SQLHomeWork
         {
             try
             {
-                using ConnectionCommandPair connectionCommandPair = InitCommand(commandString, sqlParameters);
-                return connectionCommandPair.Com.ExecuteNonQuery();
+                using (ConnectionCommandPair connectionCommandPair = InitCommand(commandString, sqlParameters))
+                {
+                    return connectionCommandPair.Com.ExecuteNonQuery(); 
+                }
             }
             catch (Exception ex)
             {
@@ -150,6 +152,7 @@ namespace SQLHomeWork
             public IDbCommand Com = null;
             public void Dispose()
             {
+                Con?.Close();
                 Con?.Dispose();
                 Com?.Dispose();
             }

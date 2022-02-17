@@ -21,14 +21,14 @@ namespace SQLHomeWork
         public long Id { get; set; }
         public BankBranch BankBranch { get; set; }
         public string Name { get; set; }
-        public string Shurname { get; set; }
+        public string Surname { get; set; }
         public double Balance { get; set; }
-        public Person(long Id, BankBranch BankBranch, string Name, string Shurname, double Balance)
+        public Person(long Id, BankBranch BankBranch, string Name, string Surname, double Balance)
         {
             this.Id = Id;
             this.BankBranch = BankBranch;
             this.Name = Name;
-            this.Shurname = Shurname;
+            this.Surname = Surname;
             this.Balance = Balance;
         }
     }
