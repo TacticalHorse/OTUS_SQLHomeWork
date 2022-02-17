@@ -144,15 +144,6 @@ namespace SQLHomeWork
             return null;
         }
 
-
-        public static IEnumerable<T> Select<T>(this IDataReader reader, Func<IDataReader,T> projection)
-        {
-            while (reader.Read())
-            {
-                yield return projection(reader);
-            }
-        }
-
         class ConnectionCommandPair:IDisposable
         {
             public IDbConnection Con = null;
