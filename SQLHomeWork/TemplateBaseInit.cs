@@ -11,9 +11,9 @@ namespace SQLHomeWork
 
         public static void InitializeTemplateBase(string BaseName)
         {
-            List<BankBranch> bankBranches = new List<BankBranch>();
-            List<Person> persons = new List<Person>();
-            List<Transaction> transactions = new List<Transaction>();
+            List<BankBranch> bankBranches = new();
+            List<Person> persons = new();
+            List<Transaction> transactions = new();
 
             SQLHelper.CreateDB(BaseName);
             SQLHelper.BaseName = BaseName;
@@ -68,7 +68,7 @@ namespace SQLHomeWork
             }
 
             Console.WriteLine(Environment.NewLine + "После проведения транзакций");
-            List<Person> UpdatedPersons = new List<Person>();
+            List<Person> UpdatedPersons = new();
             //После проведения транзакций
             foreach (var item in SQLHelper.ExecuteSQL("SELECT \"Id\", \"BankBranchId\", \"Name\", \"Surname\", \"Balance\" FROM  \"Persons\"  ORDER BY \"Id\""))
             {

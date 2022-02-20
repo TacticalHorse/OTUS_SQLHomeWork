@@ -33,27 +33,27 @@ namespace SQLHomeWork
         private static string GetSQLCmd()
         {
             Console.Write("Введите запрос: ");
-            string CMD = Console.ReadLine();
-            if (Regex.Replace(CMD, @"\s+", " ").ToLower().Contains("drop database"))
+            string cmd = Console.ReadLine();
+            if (Regex.Replace(cmd, @"\s+", " ").ToLower().Contains("drop database"))
             {
                 Console.WriteLine("Я запрещаю ДРОПАТЬ БАЗЫ! Используй /dropDB");
                 return null;
             }
-            return CMD;
+            return cmd;
         }
         public static void Exec()
         {
-            string CMD = GetSQLCmd();
-            if (string.IsNullOrEmpty(CMD)) return;
-            SQLHelper.ExecuteNonQuery(CMD);
+            string cmd = GetSQLCmd();
+            if (string.IsNullOrEmpty(cmd)) return;
+            SQLHelper.ExecuteNonQuery(cmd);
         }
 
         public static void SQL()
         {
-            string CMD = GetSQLCmd();
-            if (string.IsNullOrEmpty(CMD)) return;
-            List<string[]> rows = new List<string[]>();
-            foreach (var row in SQLHelper.ExecuteSQL(CMD))
+            string cmd = GetSQLCmd();
+            if (string.IsNullOrEmpty(cmd)) return;
+            List<string[]> rows = new();
+            foreach (var row in SQLHelper.ExecuteSQL(cmd))
             {
                 string[] rowItems = new string[row.Length]; 
                 for (int i = 0; i < row.Length; i++)
@@ -71,9 +71,9 @@ namespace SQLHomeWork
 
         public static void Scalar()
         {
-            string CMD = GetSQLCmd();
-            if (string.IsNullOrEmpty(CMD)) return;
-            Console.WriteLine(SQLHelper.ExecuteScalar(CMD));
+            string cmd = GetSQLCmd();
+            if (string.IsNullOrEmpty(cmd)) return;
+            Console.WriteLine(SQLHelper.ExecuteScalar(cmd));
         }
 
         public static void AddBankBranch()
@@ -92,14 +92,14 @@ namespace SQLHomeWork
             Console.Write("Введите фамилию: ");
             string surname = Console.ReadLine();
 
-            double balance = 0;
+            double balance;
             Console.Write("Введите баланс: ");
             while(!double.TryParse(Console.ReadLine(), out balance))
             {
                 Console.WriteLine("Формат ввода не верен.");
                 Console.Write("Введите баланс: ");
             }
-            int bankId = 0;
+            int bankId;
             Console.Write("Введите номер банка: ");
             while (!int.TryParse(Console.ReadLine(), out bankId))
             {
@@ -121,24 +121,24 @@ namespace SQLHomeWork
         }
         public static void AddTransaction()
         {
-            int FromId = 0;
+            int fromId;
             Console.Write("Введите номер пользователя от кого перечисление: ");
-            while (!int.TryParse(Console.ReadLine(), out FromId))
+            while (!int.TryParse(Console.ReadLine(), out fromId))
             {
                 Console.WriteLine("Формат ввода не верен.");
                 Console.Write("Введите номер пользователя: ");
             }
 
 
-            int ToId = 0;
+            int toId;
             Console.Write("Введите номер пользователя кому перечисление: ");
-            while (!int.TryParse(Console.ReadLine(), out ToId))
+            while (!int.TryParse(Console.ReadLine(), out toId))
             {
                 Console.WriteLine("Формат ввода не верен.");
                 Console.Write("Введите номер пользователя: ");
             }
 
-            double value = 0;
+            double value;
             Console.Write("Введите cумму: ");
             while (!double.TryParse(Console.ReadLine(), out value))
             {
@@ -149,8 +149,8 @@ namespace SQLHomeWork
             if (SQLHelper.ExecuteNonQuery(@"INSERT INTO ""Transactions"" (""FromPid"", ""ToPid"", ""Value"", ""TimeStamp"") VALUES (@fpid, @tpid, @value, now())",
                 new List<IDbDataParameter>()
                 {
-                    new NpgsqlParameter(parameterName: "fpid", value: FromId),
-                    new NpgsqlParameter(parameterName: "tpid", value: ToId),
+                    new NpgsqlParameter(parameterName: "fpid", value: fromId),
+                    new NpgsqlParameter(parameterName: "tpid", value: toId),
                     new NpgsqlParameter(parameterName: "value", value: value)
                 }) != null)
                 Console.WriteLine("Создана новая транзакция.");
@@ -172,18 +172,18 @@ namespace SQLHomeWork
         public static void CreateDB()
         {
             Console.Write("Введите название новой БД: ");
-            string DBName = Console.ReadLine();
-            if (SQLHelper.CreateDB(DBName) == -1) Console.WriteLine($"База данных {DBName} создана.");
-            else Console.WriteLine($"Ошибка на создании базы данных {DBName}.");
+            string dbName = Console.ReadLine();
+            if (SQLHelper.CreateDB(dbName) == -1) Console.WriteLine($"База данных {dbName} создана.");
+            else Console.WriteLine($"Ошибка на создании базы данных {dbName}.");
         }
 
         public static void DropDB()
         {
             Console.Write("Введите название удаляемой БД: ");
-            string DBName = Console.ReadLine();
-            if (DBName.ToLower() == "postgres") { Console.WriteLine($"Нельзя удалить {DBName}"); return; }
-            if (SQLHelper.DropDB(DBName) != null) Console.WriteLine($"База данных {DBName} удалена.");
-            else Console.WriteLine($"Ошибка на удалении базы данных {DBName}.");
+            string dbName = Console.ReadLine();
+            if (dbName.ToLower() == "postgres") { Console.WriteLine($"Нельзя удалить {dbName}"); return; }
+            if (SQLHelper.DropDB(dbName) != null) Console.WriteLine($"База данных {dbName} удалена.");
+            else Console.WriteLine($"Ошибка на удалении базы данных {dbName}.");
         }
 
     }

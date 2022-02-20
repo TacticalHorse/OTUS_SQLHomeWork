@@ -7,13 +7,13 @@ namespace SQLHomeWork
 {
     internal static class SQLHelper
     {
-        private static string Host = "localhost";
-        private static string Port = "5433";
-        private static string User = "postgres";
-        private static string Pass = "postgres";
+        private static string host = "localhost";
+        private static string port = "5433";
+        private static string user = "postgres";
+        private static string pass = "postgres";
         public static string BaseName = "otus";
-        private static string AdminConnectionString => $"Host={Host};Port={Port};Username={User};Password={Pass};Database=postgres;"; 
-        private static string UserConnectionString => $"Host={Host};Port={Port};Username={User};Password={Pass};Database={BaseName};";
+        private static string AdminConnectionString => $"Host={host};Port={port};Username={user};Password={pass};Database=postgres;"; 
+        private static string UserConnectionString => $"Host={host};Port={port};Username={user};Password={pass};Database={BaseName};";
 
         private static IDbConnection GetDBConnection(string ConnStr)
         {
@@ -27,20 +27,20 @@ namespace SQLHomeWork
 
         private static ConnectionCommandPair InitCommand(string commandString, List<IDbDataParameter> sqlParameters = null, string ConnectionString = null)
         {
-            ConnectionCommandPair Output = new ConnectionCommandPair();
+            ConnectionCommandPair output = new();
             try
             {
                 if (String.IsNullOrEmpty(ConnectionString)) ConnectionString = UserConnectionString;
-                Output.Con = GetDBConnection(ConnectionString);
-                Output.Con.Open();
-                Output.Com = GetCommand(commandString, Output.Con);
-                Output.Com.CommandType = CommandType.Text;
-                Output.Com.Parameters.Clear();
+                output.Con = GetDBConnection(ConnectionString);
+                output.Con.Open();
+                output.Com = GetCommand(commandString, output.Con);
+                output.Com.CommandType = CommandType.Text;
+                output.Com.Parameters.Clear();
                 if (sqlParameters != null)
                 {
                     foreach (var parameter in sqlParameters)
                     {
-                        Output.Com.Parameters.Add(parameter);
+                        output.Com.Parameters.Add(parameter);
                     }
                 }
             }
@@ -48,17 +48,15 @@ namespace SQLHomeWork
             {
                 Logger.WriteLog(Logger.LogStatuses.Error, $"Ошибка подключении {Environment.NewLine}{ex.Message}");
             }
-            return Output;
+            return output;
         }
 
         public static int? ExecuteNonQuery(string commandString, List<IDbDataParameter> sqlParameters = null)
         {
             try
             {
-                using (ConnectionCommandPair connectionCommandPair = InitCommand(commandString, sqlParameters))
-                {
-                    return connectionCommandPair.Com.ExecuteNonQuery(); 
-                }
+                using ConnectionCommandPair connectionCommandPair = InitCommand(commandString, sqlParameters);
+                return connectionCommandPair.Com.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -115,12 +113,12 @@ namespace SQLHomeWork
         {
             try
             {
-                string CreateDBCMD = $"CREATE DATABASE \"{DBName}\" " +
+                string cmd = $"CREATE DATABASE \"{DBName}\" " +
                     "WITH " +
                     "OWNER = postgres " +
                     "ENCODING = 'UTF8' " +
                     "CONNECTION LIMIT = -1;";
-                using ConnectionCommandPair connectionCommandPair = InitCommand(CreateDBCMD, ConnectionString: AdminConnectionString);
+                using ConnectionCommandPair connectionCommandPair = InitCommand(cmd, ConnectionString: AdminConnectionString);
                 if (connectionCommandPair.Com == null) return 1;
                 return connectionCommandPair.Com?.ExecuteNonQuery();
             }
@@ -134,8 +132,8 @@ namespace SQLHomeWork
         {
             try
             {
-                string CreateDBCMD = $"DROP DATABASE \"{DBName}\";";
-                using ConnectionCommandPair connectionCommandPair = InitCommand(CreateDBCMD, ConnectionString: AdminConnectionString);
+                string cmd = $"DROP DATABASE \"{DBName}\";";
+                using ConnectionCommandPair connectionCommandPair = InitCommand(cmd, ConnectionString: AdminConnectionString);
                 if (connectionCommandPair.Com == null) return 1;
                 return connectionCommandPair.Com?.ExecuteNonQuery();
             }

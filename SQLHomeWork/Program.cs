@@ -27,7 +27,7 @@ namespace SQLHomeWork
                     new Npgsql.NpgsqlParameter(parameterName:"name",value:"Новая запись")
                 });
             Console.WriteLine("Добавляем запись в BankBranches");
-            List<BankBranch> bankBranches = new List<BankBranch>();
+            List<BankBranch> bankBranches = new();
             foreach (var item in SQLHelper.ExecuteSQL("SELECT \"Id\", \"BranchName\" FROM  \"BankBranches\""))
             {
                 bankBranches.Add(new BankBranch((long)item[0], (string)item[1]));
@@ -37,7 +37,7 @@ namespace SQLHomeWork
 
             Console.WriteLine("Для перехода к функционалу жмякаем ENTER");
             Console.ReadLine();
-            string ucmd = "";
+            string ucmd;
             Console.Clear();
             Commands.Help();
             while (true) 

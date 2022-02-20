@@ -55,12 +55,12 @@ namespace SQLHomeWork
 
         static void PrintRows(List<string[]> Rows, int[] ColSizes)
         {
-            foreach (var Row in Rows)
+            foreach (var row in Rows)
             {
                 string rowString = "|";
                 for (int i = 0; i < ColSizes.Length; i++)
                 {
-                    rowString += Row[i].PadRight(ColSizes[i], ' ')+"|";
+                    rowString += row[i].PadRight(ColSizes[i], ' ')+"|";
                 }
                 Console.WriteLine(rowString);
             }
